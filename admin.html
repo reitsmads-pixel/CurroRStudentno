@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Capacity Management | Curro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        header {
+            background: #003c72;
+            color: white;
+            padding: 30px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            flex: 1;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            opacity: 0.9;
+            font-weight: 400;
+        }
+
+        .school-name {
+            font-size: 1.3em;
+            font-weight: 700;
+            color: #f6b242;
+            margin-top: 8px;
+        }
+
+        .logo-area {
+            font-size: 3em;
+            font-weight: 700;
+            color: #f6b242;
+        }
+
+        .nav-bar {
+            background: white;
+            padding: 20px 40px;
+            border-bottom: 3px solid #f6b242;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+
+        .nav-bar a, .nav-bar button {
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: #f6b242;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #d99a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
+        }
+
+        .btn-secondary {
+            background: #003c72;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #002a54;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background: #dc3545;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .upload-section {
+            padding: 30px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .upload-section h2 {
+            color: #003c72;
+            margin-bottom: 20px;
+            font-size: 1.5em;
+            border-left: 4px solid #f6b242;
+            padding-left: 15px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+        }
+
+        .file-input-wrapper input[type="file"] {
+            display: none;
+        }
+
+        .file-input-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 15px 35px;
+            background: #f6b242;
+            color: white;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 600;
+            font-size: 1.05em;
+        }
+
+        .file-input-label:hover {
+            background: #d99a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
+        }
+
+        .file-name {
+            margin-top: 12px;
+            color: #6c757d;
+            font-style: italic;
+            font-size: 0.95em;
+        }
+
+        .success-message {
+            padding: 15px 20px;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+            font-weight: 500;
+        }
+
+        .success-message.show {
+            display: block;
+        }
+
+        .controls {
+            padding: 25px 40px;
+            background: white;
+            display: flex;
+            gap: 15px;
+            align-items: center;
+            border-bottom: 1px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .dashboard {
+            padding: 30px 40px;
+            background: #f8f9fa;
+        }
+
+        .grade-section {
+            margin-bottom: 35px;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border: 1px solid #e0e0e0;
+        }
+
+        .grade-header {
+            background: #003c72;
+            color: white;
+            padding: 20px 30px;
+            font-size: 1.6em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .grade-header::before {
+            content: '';
+            width: 5px;
+            height: 30px;
+            background: #f6b242;
+            border-radius: 3px;
+        }
+
+        .subjects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .subjects-table thead {
+            background: #f8f9fa;
+            border-bottom: 2px solid #f6b242;
+        }
+
+        .subjects-table th {
+            padding: 16px 20px;
+            text-align: left;
+            font-weight: 600;
+            color: #003c72;
+            font-size: 0.95em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .subjects-table tbody tr {
+            border-bottom: 1px solid #e9ecef;
+            transition: background 0.2s;
+        }
+
+        .subjects-table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .subjects-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .subjects-table td {
+            padding: 16px 20px;
+        }
+
+        .subject-name {
+            font-weight: 600;
+            color: #495057;
+            font-size: 1.02em;
+        }
+
+        .current-count {
+            font-size: 1.4em;
+            font-weight: 700;
+            color: #f6b242;
+        }
+
+        .capacity-input {
+            width: 120px;
+            padding: 10px 14px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            text-align: center;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .capacity-input:focus {
+            outline: none;
+            border-color: #f6b242;
+            box-shadow: 0 0 0 3px rgba(255, 130, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .nav-bar, .controls, .upload-section, .dashboard {
+                padding: 20px;
+            }
+
+            .subjects-table {
+                font-size: 0.9em;
+            }
+
+            .subjects-table th,
+            .subjects-table td {
+                padding: 12px 10px;
+            }
+
+            .capacity-input {
+                width: 100px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <h1>Admin Panel</h1>
+                <div class="subtitle">Capacity Management System</div>
+                <div class="school-name" id="schoolName">CURRO RIVONIA</div>
+            </div>
+            <div class="logo-area">CURRO</div>
+        </header>
+
+        <div class="nav-bar">
+            <a href="dashboard.html" class="btn-primary">
+                <span>📊</span>
+                <span>View Dashboard</span>
+            </a>
+        </div>
+
+        <div class="upload-section">
+            <h2>Upload Student Data</h2>
+            <div class="file-input-wrapper">
+                <input type="file" id="fileInput" accept=".csv" />
+                <label for="fileInput" class="file-input-label">
+                    <span>📤</span>
+                    <span>Upload CSV Report</span>
+                </label>
+            </div>
+            <div class="file-name" id="fileName"></div>
+            <div class="success-message" id="uploadSuccess">
+                ✓ Data uploaded successfully! Changes will appear on the dashboard.
+            </div>
+        </div>
+
+        <div class="controls">
+            <button onclick="setDefaultCapacities()" class="btn-secondary">Set Default Capacities (+20%)</button>
+            <button onclick="saveCapacities()" class="btn-primary">💾 Save All Changes</button>
+            <button onclick="clearAllCapacities()" class="btn-danger">Clear All Capacities</button>
+        </div>
+
+        <div class="dashboard" id="dashboard"></div>
+    </div>
+
+    <script>
+        let studentData = [];
+        let capacities = {};
+
+        const initialCSVData = `Brand_Name,Company_Name,Textbox4,Textbox2,Textbox26,Textbox40
+Curro,Curro Rivonia,10,Accounting,12,2755
+Curro,Curro Rivonia,10,Advanced Programme English,2,2755
+Curro,Curro Rivonia,10,Advanced Programme Mathematics,9,2755
+Curro,Curro Rivonia,10,Afrikaans First Additional Language,47,2755
+Curro,Curro Rivonia,10,Business Studies,45,2755
+Curro,Curro Rivonia,10,Computer Applications Technology,29,2755
+Curro,Curro Rivonia,10,Engineering Graphics and Design,16,2755
+Curro,Curro Rivonia,10,English Home Language,70,2755
+Curro,Curro Rivonia,10,History,25,2755
+Curro,Curro Rivonia,10,Information Technology,19,2755
+Curro,Curro Rivonia,10,isiZulu First Additional Language,18,2755
+Curro,Curro Rivonia,10,Life Orientation,70,2755
+Curro,Curro Rivonia,10,Life Sciences,24,2755
+Curro,Curro Rivonia,10,Mathematical Literacy,34,2755
+Curro,Curro Rivonia,10,Mathematics,50,2755
+Curro,Curro Rivonia,10,Physical Sciences,33,2755
+Curro,Curro Rivonia,10,Tourism,23,2755
+Curro,Curro Rivonia,10,Visual Arts,12,2755
+Curro,Curro Rivonia,11,Accounting,13,2755
+Curro,Curro Rivonia,11,Advanced Programme English,4,2755
+Curro,Curro Rivonia,11,Advanced Programme Mathematics,7,2755
+Curro,Curro Rivonia,11,Afrikaans First Additional Language,51,2755
+Curro,Curro Rivonia,11,Business Studies,36,2755
+Curro,Curro Rivonia,11,Computer Applications Technology,14,2755
+Curro,Curro Rivonia,11,Economics,3,2755
+Curro,Curro Rivonia,11,Engineering Graphics and Design,15,2755
+Curro,Curro Rivonia,11,English Home Language,69,2755
+Curro,Curro Rivonia,11,Geography,3,2755
+Curro,Curro Rivonia,11,History,34,2755
+Curro,Curro Rivonia,11,Information Technology,10,2755
+Curro,Curro Rivonia,11,isiZulu First Additional Language,17,2755
+Curro,Curro Rivonia,11,Life Orientation,69,2755
+Curro,Curro Rivonia,11,Life Sciences,30,2755
+Curro,Curro Rivonia,11,Mathematical Literacy,30,2755
+Curro,Curro Rivonia,11,Mathematics,44,2755
+Curro,Curro Rivonia,11,Physical Sciences,27,2755
+Curro,Curro Rivonia,11,Tourism,33,2755
+Curro,Curro Rivonia,11,Visual Arts,5,2755
+Curro,Curro Rivonia,12,Accounting,9,2755
+Curro,Curro Rivonia,12,Advanced Programme Mathematics,2,2755
+Curro,Curro Rivonia,12,Afrikaans First Additional Language,44,2755
+Curro,Curro Rivonia,12,Business Studies,31,2755
+Curro,Curro Rivonia,12,Computer Applications Technology,16,2755
+Curro,Curro Rivonia,12,Economics,7,2755
+Curro,Curro Rivonia,12,Engineering Graphics and Design,13,2755
+Curro,Curro Rivonia,12,English Home Language,65,2755
+Curro,Curro Rivonia,12,French Second Additional Language,2,2755
+Curro,Curro Rivonia,12,Geography,8,2755
+Curro,Curro Rivonia,12,History,30,2755
+Curro,Curro Rivonia,12,Information Technology,5,2755
+Curro,Curro Rivonia,12,isiZulu First Additional Language,15,2755
+Curro,Curro Rivonia,12,Life Orientation,64,2755
+Curro,Curro Rivonia,12,Life Sciences,27,2755
+Curro,Curro Rivonia,12,Mathematical Literacy,37,2755
+Curro,Curro Rivonia,12,Mathematics,35,2755
+Curro,Curro Rivonia,12,Physical Sciences,18,2755
+Curro,Curro Rivonia,12,Portuguese Second Additional Language,1,2755
+Curro,Curro Rivonia,12,Tourism,19,2755
+Curro,Curro Rivonia,12,Visual Arts,13,2755
+Curro,Curro Rivonia,8,Afrikaans First Additional Language,59,2755
+Curro,Curro Rivonia,8,Business Studies,74,2755
+Curro,Curro Rivonia,8,Coding and Robotics ,74,2755
+Curro,Curro Rivonia,8,Creative Arts,74,2755
+Curro,Curro Rivonia,8,English Home Language,74,2755
+Curro,Curro Rivonia,8,isiZulu First Additional Language,15,2755
+Curro,Curro Rivonia,8,Life Orientation,74,2755
+Curro,Curro Rivonia,8,Mathematics,74,2755
+Curro,Curro Rivonia,8,Natural Sciences,74,2755
+Curro,Curro Rivonia,8,Social Sciences,74,2755
+Curro,Curro Rivonia,9,Accounting,64,2755
+Curro,Curro Rivonia,9,Afrikaans First Additional Language,45,2755
+Curro,Curro Rivonia,9,Coding and Robotics ,64,2755
+Curro,Curro Rivonia,9,Creative Arts,64,2755
+Curro,Curro Rivonia,9,English Home Language,64,2755
+Curro,Curro Rivonia,9,isiZulu First Additional Language,19,2755
+Curro,Curro Rivonia,9,Life Orientation,64,2755
+Curro,Curro Rivonia,9,Mathematics,64,2755
+Curro,Curro Rivonia,9,Natural Sciences,64,2755
+Curro,Curro Rivonia,9,Social Sciences,64,2755`;
+
+        window.addEventListener('DOMContentLoaded', () => {
+            parseCSV(initialCSVData);
+            loadCapacities();
+            renderDashboard();
+        });
+
+        document.getElementById('fileInput').addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                document.getElementById('fileName').textContent = `Loaded: ${file.name}`;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    parseCSV(event.target.result);
+                    saveStudentData();
+                    renderDashboard();
+                    showSuccessMessage();
+                };
+                reader.readAsText(file);
+            }
+        });
+
+        function showSuccessMessage() {
+            const msg = document.getElementById('uploadSuccess');
+            msg.classList.add('show');
+            setTimeout(() => {
+                msg.classList.remove('show');
+            }, 3000);
+        }
+
+        function parseCSV(text) {
+            const lines = text.trim().split('\n');
+            studentData = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                if (lines[i].trim()) {
+                    const parts = lines[i].split(',');
+                    if (parts.length >= 6) {
+                        const grade = parseInt(parts[2]);
+                        const subject = parts[3].trim();
+                        const count = parseInt(parts[4]);
+                        
+                        studentData.push({
+                            brand: parts[0].trim(),
+                            school: parts[1].trim(),
+                            grade: grade,
+                            subject: subject,
+                            count: count,
+                            key: `${grade}-${subject}`
+                        });
+                    }
+                }
+            }
+
+            if (studentData.length > 0) {
+                document.getElementById('schoolName').textContent = studentData[0].school.toUpperCase();
+            }
+        }
+
+        function saveStudentData() {
+            localStorage.setItem('studentData', JSON.stringify(studentData));
+        }
+
+        function loadCapacities() {
+            const saved = localStorage.getItem('subjectCapacities');
+            if (saved) {
+                capacities = JSON.parse(saved);
+            }
+        }
+
+        function saveCapacities() {
+            localStorage.setItem('subjectCapacities', JSON.stringify(capacities));
+            saveStudentData();
+            alert('✓ All capacities saved successfully!');
+        }
+
+        function setDefaultCapacities() {
+            studentData.forEach(item => {
+                capacities[item.key] = Math.ceil(item.count * 1.2);
+            });
+            saveCapacities();
+            renderDashboard();
+        }
+
+        function clearAllCapacities() {
+            if (confirm('Are you sure you want to clear all capacity settings?')) {
+                capacities = {};
+                saveCapacities();
+                renderDashboard();
+            }
+        }
+
+        function updateCapacity(key, value) {
+            capacities[key] = parseInt(value) || 0;
+        }
+
+        function renderDashboard() {
+            const grades = [...new Set(studentData.map(d => d.grade))].sort();
+            const dashboardDiv = document.getElementById('dashboard');
+            dashboardDiv.innerHTML = '';
+
+            grades.forEach(grade => {
+                const gradeData = studentData.filter(d => d.grade === grade)
+                    .sort((a, b) => b.count - a.count);
+
+                const section = document.createElement('div');
+                section.className = 'grade-section';
+
+                let tableHTML = `
+                    <div class="grade-header">Grade ${grade}</div>
+                    <table class="subjects-table">
+                        <thead>
+                            <tr>
+                                <th>Subject</th>
+                                <th>Current Students</th>
+                                <th>Maximum Capacity</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                `;
+
+                gradeData.forEach(item => {
+                    const capacity = capacities[item.key] || 0;
+
+                    tableHTML += `
+                        <tr>
+                            <td class="subject-name">${item.subject}</td>
+                            <td><span class="current-count">${item.count}</span></td>
+                            <td>
+                                <input 
+                                    type="number" 
+                                    class="capacity-input" 
+                                    value="${capacity}" 
+                                    min="0"
+                                    placeholder="Set max"
+                                    onchange="updateCapacity('${item.key}', this.value)"
+                                />
+                            </td>
+                        </tr>
+                    `;
+                });
+
+                tableHTML += `
+                        </tbody>
+                    </table>
+                `;
+
+                section.innerHTML = tableHTML;
+                dashboardDiv.appendChild(section);
+            });
+        }
+    </script>
+</body>
+</html>

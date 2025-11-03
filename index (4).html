@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Capacity System | Curro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            width: 100%;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            overflow: hidden;
+            border-top: 6px solid #f6b242;
+        }
+
+        header {
+            background: #003c72;
+            color: white;
+            padding: 40px;
+            text-align: center;
+        }
+
+        header .logo {
+            font-size: 3.5em;
+            font-weight: 700;
+            color: #f6b242;
+            margin-bottom: 15px;
+        }
+
+        header h1 {
+            font-size: 2.2em;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .intro {
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .intro h2 {
+            color: #003c72;
+            font-size: 1.8em;
+            margin-bottom: 10px;
+        }
+
+        .intro p {
+            color: #6c757d;
+            font-size: 1.05em;
+        }
+
+        .options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .option-card {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s;
+            border: 2px solid #e0e0e0;
+        }
+
+        .option-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+            border-color: #f6b242;
+        }
+
+        .option-card .icon {
+            font-size: 4em;
+            margin-bottom: 20px;
+        }
+
+        .option-card h2 {
+            font-size: 1.6em;
+            color: #003c72;
+            margin-bottom: 15px;
+        }
+
+        .option-card p {
+            color: #6c757d;
+            margin-bottom: 20px;
+            line-height: 1.6;
+            font-size: 0.98em;
+        }
+
+        .option-card .features {
+            text-align: left;
+            margin-bottom: 25px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .option-card .features li {
+            color: #495057;
+            margin-bottom: 10px;
+            padding-left: 5px;
+            font-size: 0.95em;
+        }
+
+        .option-card a {
+            display: inline-block;
+            padding: 14px 40px;
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 1.05em;
+            transition: all 0.2s;
+        }
+
+        .option-card.admin a {
+            background: #003c72;
+        }
+
+        .option-card.admin a:hover {
+            background: #002a54;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 59, 92, 0.3);
+        }
+
+        .option-card.dashboard a {
+            background: #f6b242;
+        }
+
+        .option-card.dashboard a:hover {
+            background: #d99a2e;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
+        }
+
+        .info-box {
+            background: #fff3e0;
+            border-left: 4px solid #f6b242;
+            padding: 20px 25px;
+            margin-top: 30px;
+            border-radius: 6px;
+        }
+
+        .info-box h3 {
+            color: #003c72;
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .info-box p {
+            color: #495057;
+            line-height: 1.7;
+            font-size: 0.98em;
+        }
+
+        .info-box strong {
+            color: #003c72;
+        }
+
+        footer {
+            background: #f8f9fa;
+            padding: 25px;
+            text-align: center;
+            color: #6c757d;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        footer p {
+            margin: 5px 0;
+            font-size: 0.95em;
+        }
+
+        footer strong {
+            color: #003c72;
+        }
+
+        @media (max-width: 768px) {
+            header .logo {
+                font-size: 2.5em;
+            }
+
+            header h1 {
+                font-size: 1.8em;
+            }
+
+            .options {
+                grid-template-columns: 1fr;
+            }
+
+            .content {
+                padding: 25px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">CURRO</div>
+            <h1>Student Capacity System</h1>
+            <p>Rivonia Campus</p>
+        </header>
+
+        <div class="content">
+            <div class="intro">
+                <h2>Select Your Access Level</h2>
+                <p>Choose the appropriate page based on your role</p>
+            </div>
+
+            <div class="options">
+                <div class="option-card admin">
+                    <div class="icon">🔧</div>
+                    <h2>Admin Panel</h2>
+                    <p>For administrators and registrars managing capacity settings and student data</p>
+                    <div class="features">
+                        <ul>
+                            <li>✓ Upload CSV reports</li>
+                            <li>✓ Set maximum capacities</li>
+                            <li>✓ Manage all settings</li>
+                            <li>✓ Save and export data</li>
+                        </ul>
+                    </div>
+                    <a href="admin.html">Open Admin Panel</a>
+                </div>
+
+                <div class="option-card dashboard">
+                    <div class="icon">📊</div>
+                    <h2>View Dashboard</h2>
+                    <p>For teachers and staff to monitor current capacity status with visual indicators</p>
+                    <div class="features">
+                        <ul>
+                            <li>✓ View capacity status</li>
+                            <li>✓ Color-coded indicators</li>
+                            <li>✓ Print-ready reports</li>
+                            <li>✓ Real-time updates</li>
+                        </ul>
+                    </div>
+                    <a href="dashboard.html">View Dashboard</a>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <h3>📖 Getting Started</h3>
+                <p>
+                    <strong>First-time users:</strong> Start with the <strong>Admin Panel</strong> to configure your capacity limits. 
+                    Use the "Set Default Capacities" button for quick setup, then save your changes. 
+                    After configuration, access the <strong>Dashboard</strong> to view beautiful visual reports of your capacity status.
+                </p>
+            </div>
+
+            <div class="info-box" style="background: #e8f5e9; border-color: #4caf50; margin-top: 20px;">
+                <h3>💡 Pro Tip</h3>
+                <p>
+                    Bookmark both pages! Use the Admin Panel for periodic updates and capacity management, 
+                    while the Dashboard is perfect for daily monitoring and sharing with department heads.
+                </p>
+            </div>
+        </div>
+
+        <footer>
+            <p><strong>Need Help?</strong> Refer to README.md for detailed instructions</p>
+            <p style="margin-top: 12px;">Data stored locally • No internet required • Secure & Private</p>
+            <p style="margin-top: 8px; color: #f6b242; font-weight: 600;">Curro Rivonia © 2025</p>
+        </footer>
+    </div>
+</body>
+</html>
