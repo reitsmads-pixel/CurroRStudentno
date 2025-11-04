@@ -80,10 +80,10 @@
 
         .features {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(3, 1fr);
             gap: 25px;
             margin: 40px 0;
-            max-width: 900px;
+            max-width: 1200px;
             margin-left: auto;
             margin-right: auto;
         }
@@ -180,6 +180,62 @@
             color: white;
         }
 
+        .info-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 35px;
+            margin: 50px 0;
+        }
+
+        .info-section h3 {
+            color: #003c72;
+            font-size: 1.8em;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .feature-highlights {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .highlight-item {
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 20px;
+            border: 2px solid #e0e0e0;
+            transition: all 0.3s;
+        }
+
+        .highlight-item:hover {
+            transform: translateY(-3px);
+            border-color: #f6b242;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+
+        .highlight-icon {
+            font-size: 2.5em;
+            flex-shrink: 0;
+        }
+
+        .highlight-content h4 {
+            color: #003c72;
+            font-size: 1.2em;
+            margin-bottom: 8px;
+        }
+
+        .highlight-content p {
+            color: #6c757d;
+            line-height: 1.6;
+            margin: 0;
+        }
+
         footer {
             background: #f8f9fa;
             padding: 25px;
@@ -213,6 +269,14 @@
                 grid-template-columns: 1fr;
             }
 
+            .feature-highlights {
+                grid-template-columns: 1fr;
+            }
+
+            .info-section {
+                padding: 25px 20px;
+            }
+
             .cta-buttons {
                 flex-direction: column;
                 align-items: stretch;
@@ -221,6 +285,12 @@
             .btn {
                 width: 100%;
                 justify-content: center;
+            }
+        }
+
+        @media (min-width: 769px) and (max-width: 1024px) {
+            .features {
+                grid-template-columns: repeat(2, 1fr);
             }
         }
     </style>
@@ -236,7 +306,7 @@
         <div class="content">
             <div class="intro">
                 <h2>Welcome to Your Capacity System</h2>
-                <p>Check student admissions in real-time and manage enrollment capacity across all your subjects and grades.</p>
+                <p>Secure, real-time student admission management with automatic email notifications. Check capacity, admit students, and keep your team informed instantly.</p>
             </div>
 
             <div class="features">
@@ -260,6 +330,36 @@
                     <h3>CSV Updates</h3>
                     <p>Upload reports periodically to sync with actual enrollment numbers</p>
                 </div>
+                <div class="feature">
+                    <div class="feature-icon">📧</div>
+                    <h3>Email Notifications</h3>
+                    <p>Automatic emails sent to staff when students are admitted with all details</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure Access</h3>
+                    <p>Firebase authentication ensures only authorized users can access the system</p>
+                </div>
+            </div>
+
+            <div class="info-section">
+                <h3>🎉 New Features</h3>
+                <div class="feature-highlights">
+                    <div class="highlight-item">
+                        <div class="highlight-icon">🔒</div>
+                        <div class="highlight-content">
+                            <h4>Secure Authentication</h4>
+                            <p>Sign in with your email and password to access the system securely</p>
+                        </div>
+                    </div>
+                    <div class="highlight-item">
+                        <div class="highlight-icon">📧</div>
+                        <div class="highlight-content">
+                            <h4>Email Notifications</h4>
+                            <p>Automatic emails sent to staff when students are admitted with full details</p>
+                        </div>
+                    </div>
+                </div>
             </div>
 
             <div class="cta-section">
@@ -280,7 +380,7 @@
 
         <footer>
             <p><strong>Curro Rivonia</strong> | Student Capacity Management System</p>
-            <p style="margin-top: 10px;">Real-time Admission Tracking</p>
+            <p style="margin-top: 10px;">Secure Authentication • Real-time Sync • Email Notifications</p>
             <p style="margin-top: 8px; color: #f6b242; font-weight: 600;">© 2025</p>
         </footer>
     </div>

@@ -371,6 +371,11 @@
                     <h2>✅ Check Student Admission</h2>
                     
                     <div class="form-group">
+                        <label>Student Name</label>
+                        <input type="text" id="studentName" placeholder="Enter student full name" style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 1em;">
+                    </div>
+
+                    <div class="form-group">
                         <label>Select Grade</label>
                         <select id="admissionGrade" onchange="loadSubjectsForGrade()">
                             <option value="">-- Choose Grade --</option>
@@ -421,6 +426,18 @@
                         Clear All Capacities
                     </button>
                 </div>
+
+                <div class="section">
+                    <h2>📧 Email Notifications</h2>
+                    <div class="form-group">
+                        <label>Recipient Email Addresses</label>
+                        <textarea id="emailRecipients" placeholder="Enter email addresses (one per line)&#10;example@currorivonia.co.za&#10;admin@currorivonia.co.za" style="width: 100%; padding: 10px 12px; border: 2px solid #e0e0e0; border-radius: 6px; font-size: 0.9em; min-height: 100px; font-family: inherit; resize: vertical;"></textarea>
+                        <small style="color: #6c757d; font-size: 0.85em;">Emails will be sent when a student is admitted</small>
+                    </div>
+                    <button onclick="saveEmailSettings()" class="btn btn-secondary" style="width: 100%;">
+                        💾 Save Email Settings
+                    </button>
+                </div>
             </div>
 
             <div class="content-area">
@@ -434,6 +451,9 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
 
     <script>
         // YOUR FIREBASE CONFIGURATION - ALREADY SET UP!
@@ -488,6 +508,18 @@
         let studentData = [];
         let capacities = {};
         let selectedSubjects = [];
+        let emailRecipients = [];
+
+        // Initialize EmailJS - CONFIGURED WITH YOUR CREDENTIALS
+        const EMAILJS_PUBLIC_KEY = 'Vw5a0CwDdKhv90Z-N';
+        const EMAILJS_SERVICE_ID = 'service_wu805b1';
+        const EMAILJS_TEMPLATE_ID = 'template_4dhxbfk';
+
+        // Initialize EmailJS
+        if (typeof emailjs !== 'undefined') {
+            emailjs.init(EMAILJS_PUBLIC_KEY);
+            console.log('✅ EmailJS initialized successfully');
+        }
 
         // Initial CSV data
         const initialCSVData = `Brand_Name,Company_Name,Textbox4,Textbox2,Textbox26,Textbox40
@@ -624,6 +656,7 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             try {
                 await database.ref('studentData').set(studentData);
                 await database.ref('capacities').set(capacities);
+                await database.ref('emailRecipients').set(emailRecipients);
                 alert("✅ Data saved to cloud successfully!");
             } catch (error) {
                 console.error("Error saving to Firebase:", error);
@@ -637,6 +670,7 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             try {
                 const dataSnapshot = await database.ref('studentData').once('value');
                 const capSnapshot = await database.ref('capacities').once('value');
+                const emailSnapshot = await database.ref('emailRecipients').once('value');
                 
                 if (dataSnapshot.exists()) {
                     studentData = dataSnapshot.val();
@@ -644,6 +678,11 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                 
                 if (capSnapshot.exists()) {
                     capacities = capSnapshot.val();
+                }
+
+                if (emailSnapshot.exists()) {
+                    emailRecipients = emailSnapshot.val();
+                    document.getElementById('emailRecipients').value = emailRecipients.join('\n');
                 }
 
                 renderCapacityManagement();
@@ -743,10 +782,76 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             }
         }
 
+        function saveEmailSettings() {
+            const emailText = document.getElementById('emailRecipients').value;
+            emailRecipients = emailText.split('\n')
+                .map(email => email.trim())
+                .filter(email => email.length > 0 && email.includes('@'));
+            
+            saveToFirebase();
+            alert(`✅ Email settings saved! ${emailRecipients.length} recipient(s) configured.`);
+        }
+
+        async function sendAdmissionEmail(studentName, grade, subjects) {
+            // Check if EmailJS is configured
+            if (EMAILJS_PUBLIC_KEY === 'YOUR_EMAILJS_PUBLIC_KEY') {
+                console.log('EmailJS not configured - skipping email');
+                return;
+            }
+
+            // Check if there are recipients
+            if (emailRecipients.length === 0) {
+                console.log('No email recipients configured - skipping email');
+                return;
+            }
+
+            try {
+                // Get subject names
+                const subjectNames = subjects.map(key => {
+                    const subject = studentData.find(s => s.key === key);
+                    return subject ? subject.subject : key;
+                });
+
+                // Send email to each recipient
+                for (const recipient of emailRecipients) {
+                    const templateParams = {
+                        to_email: recipient,
+                        student_name: studentName,
+                        grade: grade,
+                        subjects: subjectNames.join(', '),
+                        subject_list: subjectNames.map(s => `• ${s}`).join('\n'),
+                        date: new Date().toLocaleDateString('en-ZA', { 
+                            year: 'numeric', 
+                            month: 'long', 
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                        })
+                    };
+
+                    await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
+                    console.log(`✅ Email sent to ${recipient}`);
+                }
+
+                return true;
+            } catch (error) {
+                console.error('Error sending email:', error);
+                return false;
+            }
+        }
+
         async function admitStudent() {
             if (selectedSubjects.length === 0) return;
 
-            if (!confirm(`Admit student to ${selectedSubjects.length} subject(s)?\n\nThis will increase the student count by 1 for each selected subject.`)) {
+            const studentName = document.getElementById('studentName').value.trim();
+            const grade = document.getElementById('admissionGrade').value;
+
+            if (!studentName) {
+                alert("Please enter the student's name before admitting.");
+                return;
+            }
+
+            if (!confirm(`Admit ${studentName} to Grade ${grade} for ${selectedSubjects.length} subject(s)?\n\nThis will increase the student count by 1 for each selected subject.`)) {
                 return;
             }
 
@@ -760,13 +865,27 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             await saveToFirebase();
             renderCapacityManagement();
             
+            // Send email notification
+            const emailSent = await sendAdmissionEmail(studentName, grade, selectedSubjects);
+            
             const resultDiv = document.getElementById('admissionResult');
             resultDiv.className = 'result-box success';
-            resultDiv.innerHTML = `<strong>✅ Student admitted successfully!</strong><br>Counts updated and saved to cloud.`;
+            
+            let emailStatus = '';
+            if (emailRecipients.length > 0) {
+                if (emailSent) {
+                    emailStatus = `<br><br>📧 Email notifications sent to ${emailRecipients.length} recipient(s)`;
+                } else {
+                    emailStatus = '<br><br>⚠️ Email notification failed (check console for details)';
+                }
+            }
+            
+            resultDiv.innerHTML = `<strong>✅ ${studentName} admitted successfully to Grade ${grade}!</strong><br>Counts updated and saved to cloud.${emailStatus}`;
             
             document.getElementById('admitBtn').style.display = 'none';
             
-            // Clear selections
+            // Clear form
+            document.getElementById('studentName').value = '';
             document.querySelectorAll('.subject-checkbox input[type="checkbox"]').forEach(cb => cb.checked = false);
             selectedSubjects = [];
         }
