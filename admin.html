@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Capacity Management | Curro</title>
+    <title>Admin Panel | Curro Capacity System</title>
     <style>
         * {
             margin: 0;
@@ -18,7 +18,7 @@
         }
 
         .container {
-            max-width: 1600px;
+            max-width: 1800px;
             margin: 0 auto;
             background: white;
             min-height: 100vh;
@@ -27,65 +27,53 @@
         header {
             background: #003c72;
             color: white;
-            padding: 30px 40px;
+            padding: 25px 40px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
 
-        .header-content {
-            flex: 1;
-        }
-
         header h1 {
-            font-size: 2.2em;
-            margin-bottom: 5px;
+            font-size: 2em;
             font-weight: 600;
         }
 
-        .subtitle {
-            font-size: 1.1em;
-            opacity: 0.9;
-            font-weight: 400;
-        }
-
         .school-name {
-            font-size: 1.3em;
+            font-size: 1.2em;
             font-weight: 700;
             color: #f6b242;
-            margin-top: 8px;
+            margin-top: 5px;
         }
 
-        .logo-area {
-            font-size: 3em;
+        .logo {
+            font-size: 2.5em;
             font-weight: 700;
             color: #f6b242;
         }
 
         .nav-bar {
             background: white;
-            padding: 20px 40px;
+            padding: 15px 40px;
             border-bottom: 3px solid #f6b242;
             display: flex;
-            gap: 15px;
+            gap: 12px;
             align-items: center;
             flex-wrap: wrap;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
-        .nav-bar a, .nav-bar button {
-            padding: 12px 28px;
+        .btn {
+            padding: 10px 24px;
             border-radius: 6px;
             font-weight: 600;
-            font-size: 1em;
+            font-size: 0.95em;
             cursor: pointer;
             transition: all 0.2s;
-            text-decoration: none;
             border: none;
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            text-decoration: none;
         }
 
         .btn-primary {
@@ -96,7 +84,6 @@
         .btn-primary:hover {
             background: #d99a2e;
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
         }
 
         .btn-secondary {
@@ -106,7 +93,6 @@
 
         .btn-secondary:hover {
             background: #002a54;
-            transform: translateY(-2px);
         }
 
         .btn-danger {
@@ -114,27 +100,149 @@
             color: white;
         }
 
-        .btn-danger:hover {
-            background: #c82333;
+        .btn-success {
+            background: #28a745;
+            color: white;
         }
 
-        .upload-section {
-            padding: 30px 40px;
+        .main-content {
+            display: grid;
+            grid-template-columns: 450px 1fr;
+            gap: 0;
+            min-height: calc(100vh - 140px);
+        }
+
+        .sidebar {
             background: #f8f9fa;
-            border-bottom: 1px solid #e0e0e0;
+            padding: 30px;
+            border-right: 2px solid #e0e0e0;
+            overflow-y: auto;
         }
 
-        .upload-section h2 {
+        .content-area {
+            padding: 30px 40px;
+            overflow-y: auto;
+        }
+
+        .section {
+            background: white;
+            border-radius: 8px;
+            padding: 25px;
+            margin-bottom: 25px;
+            border: 1px solid #e0e0e0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .section h2 {
             color: #003c72;
+            font-size: 1.4em;
             margin-bottom: 20px;
-            font-size: 1.5em;
-            border-left: 4px solid #f6b242;
-            padding-left: 15px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #f6b242;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #495057;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .form-group select,
+        .form-group input[type="number"] {
+            width: 100%;
+            padding: 10px 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 1em;
+            transition: border-color 0.2s;
+        }
+
+        .form-group select:focus,
+        .form-group input:focus {
+            outline: none;
+            border-color: #f6b242;
+        }
+
+        .subjects-checklist {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 15px;
+            background: white;
+        }
+
+        .subject-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            transition: background 0.2s;
+        }
+
+        .subject-checkbox:hover {
+            background: #f8f9fa;
+        }
+
+        .subject-checkbox input[type="checkbox"] {
+            margin-right: 10px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .subject-checkbox label {
+            cursor: pointer;
+            flex: 1;
+            font-weight: normal !important;
+            margin: 0 !important;
+        }
+
+        .result-box {
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 15px;
+            display: none;
+        }
+
+        .result-box.success {
+            background: #d4edda;
+            border: 1px solid #c3e6cb;
+            color: #155724;
+            display: block;
+        }
+
+        .result-box.error {
+            background: #f8d7da;
+            border: 1px solid #f5c6cb;
+            color: #721c24;
+            display: block;
+        }
+
+        .result-box.info {
+            background: #d1ecf1;
+            border: 1px solid #bee5eb;
+            color: #0c5460;
+            display: block;
+        }
+
+        .capacity-info {
+            font-size: 0.9em;
+            color: #6c757d;
+            margin-top: 5px;
         }
 
         .file-input-wrapper {
             position: relative;
             display: inline-block;
+            width: 100%;
         }
 
         .file-input-wrapper input[type="file"] {
@@ -142,88 +250,37 @@
         }
 
         .file-input-label {
-            display: inline-flex;
+            display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            padding: 15px 35px;
+            padding: 12px 20px;
             background: #f6b242;
             color: white;
             border-radius: 6px;
             cursor: pointer;
             transition: all 0.2s;
             font-weight: 600;
-            font-size: 1.05em;
         }
 
         .file-input-label:hover {
             background: #d99a2e;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
-        }
-
-        .file-name {
-            margin-top: 12px;
-            color: #6c757d;
-            font-style: italic;
-            font-size: 0.95em;
-        }
-
-        .success-message {
-            padding: 15px 20px;
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
-            border-radius: 6px;
-            margin-top: 15px;
-            display: none;
-            font-weight: 500;
-        }
-
-        .success-message.show {
-            display: block;
-        }
-
-        .controls {
-            padding: 25px 40px;
-            background: white;
-            display: flex;
-            gap: 15px;
-            align-items: center;
-            border-bottom: 1px solid #e0e0e0;
-            flex-wrap: wrap;
-        }
-
-        .dashboard {
-            padding: 30px 40px;
-            background: #f8f9fa;
         }
 
         .grade-section {
-            margin-bottom: 35px;
+            margin-bottom: 30px;
             background: white;
             border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
             border: 1px solid #e0e0e0;
         }
 
         .grade-header {
             background: #003c72;
             color: white;
-            padding: 20px 30px;
-            font-size: 1.6em;
+            padding: 15px 25px;
+            font-size: 1.3em;
             font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .grade-header::before {
-            content: '';
-            width: 5px;
-            height: 30px;
-            background: #f6b242;
-            border-radius: 3px;
         }
 
         .subjects-table {
@@ -233,91 +290,58 @@
 
         .subjects-table thead {
             background: #f8f9fa;
-            border-bottom: 2px solid #f6b242;
         }
 
         .subjects-table th {
-            padding: 16px 20px;
+            padding: 12px 20px;
             text-align: left;
             font-weight: 600;
             color: #003c72;
-            font-size: 0.95em;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .subjects-table tbody tr {
-            border-bottom: 1px solid #e9ecef;
-            transition: background 0.2s;
-        }
-
-        .subjects-table tbody tr:hover {
-            background: #f8f9fa;
-        }
-
-        .subjects-table tbody tr:last-child {
-            border-bottom: none;
+            font-size: 0.9em;
+            border-bottom: 2px solid #f6b242;
         }
 
         .subjects-table td {
-            padding: 16px 20px;
+            padding: 12px 20px;
+            border-bottom: 1px solid #e9ecef;
         }
 
-        .subject-name {
-            font-weight: 600;
-            color: #495057;
-            font-size: 1.02em;
+        .subjects-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .capacity-input {
+            width: 100px;
+            padding: 6px 10px;
+            border: 2px solid #e0e0e0;
+            border-radius: 4px;
+            text-align: center;
         }
 
         .current-count {
-            font-size: 1.4em;
+            font-size: 1.2em;
             font-weight: 700;
             color: #f6b242;
         }
 
-        .capacity-input {
-            width: 120px;
-            padding: 10px 14px;
-            border: 2px solid #e0e0e0;
-            border-radius: 6px;
-            font-size: 1em;
-            text-align: center;
-            transition: all 0.2s;
-            font-weight: 500;
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: 600;
         }
 
-        .capacity-input:focus {
-            outline: none;
-            border-color: #f6b242;
-            box-shadow: 0 0 0 3px rgba(255, 130, 0, 0.1);
-        }
+        .status-available { background: #d4edda; color: #155724; }
+        .status-full { background: #fff3cd; color: #856404; }
+        .status-over { background: #f8d7da; color: #721c24; }
 
-        @media (max-width: 768px) {
-            header {
-                flex-direction: column;
-                text-align: center;
-                gap: 15px;
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
             }
-
-            header h1 {
-                font-size: 1.8em;
-            }
-
-            .nav-bar, .controls, .upload-section, .dashboard {
-                padding: 20px;
-            }
-
-            .subjects-table {
-                font-size: 0.9em;
-            }
-
-            .subjects-table th,
-            .subjects-table td {
-                padding: 12px 10px;
-            }
-
-            .capacity-input {
-                width: 100px;
+            .sidebar {
+                border-right: none;
+                border-bottom: 2px solid #e0e0e0;
             }
         }
     </style>
@@ -325,49 +349,147 @@
 <body>
     <div class="container">
         <header>
-            <div class="header-content">
+            <div>
                 <h1>Admin Panel</h1>
-                <div class="subtitle">Capacity Management System</div>
                 <div class="school-name" id="schoolName">CURRO RIVONIA</div>
             </div>
-            <div class="logo-area">CURRO</div>
+            <div class="logo">CURRO</div>
         </header>
 
         <div class="nav-bar">
-            <a href="dashboard.html" class="btn-primary">
-                <span>📊</span>
-                <span>View Dashboard</span>
-            </a>
+            <a href="dashboard.html" class="btn btn-primary">📊 View Dashboard</a>
+            <button onclick="saveToFirebase()" class="btn btn-secondary">☁️ Save to Cloud</button>
+            <button onclick="loadFromFirebase()" class="btn btn-secondary">🔄 Reload from Cloud</button>
+            <div style="flex: 1;"></div>
+            <span style="color: #6c757d; font-size: 0.9em; margin-right: 15px;">👤 <span id="userEmail">Loading...</span></span>
+            <button onclick="signOut()" class="btn btn-danger">🚪 Sign Out</button>
         </div>
 
-        <div class="upload-section">
-            <h2>Upload Student Data</h2>
-            <div class="file-input-wrapper">
-                <input type="file" id="fileInput" accept=".csv" />
-                <label for="fileInput" class="file-input-label">
-                    <span>📤</span>
-                    <span>Upload CSV Report</span>
-                </label>
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="section">
+                    <h2>✅ Check Student Admission</h2>
+                    
+                    <div class="form-group">
+                        <label>Select Grade</label>
+                        <select id="admissionGrade" onchange="loadSubjectsForGrade()">
+                            <option value="">-- Choose Grade --</option>
+                            <option value="8">Grade 8</option>
+                            <option value="9">Grade 9</option>
+                            <option value="10">Grade 10</option>
+                            <option value="11">Grade 11</option>
+                            <option value="12">Grade 12</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Subjects Student Wants</label>
+                        <div class="subjects-checklist" id="subjectsList">
+                            <p style="color: #6c757d; text-align: center;">Select a grade first</p>
+                        </div>
+                    </div>
+
+                    <button onclick="checkCapacity()" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                        🔍 Check if Student Can Be Admitted
+                    </button>
+
+                    <div id="admissionResult" class="result-box"></div>
+
+                    <button onclick="admitStudent()" id="admitBtn" class="btn btn-success" style="width: 100%; display: none;">
+                        ➕ Admit Student (Update Counts)
+                    </button>
+                </div>
+
+                <div class="section">
+                    <h2>📤 Upload CSV Data</h2>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="fileInput" accept=".csv" />
+                        <label for="fileInput" class="file-input-label">
+                            <span>📄</span>
+                            <span>Upload CSV Report</span>
+                        </label>
+                    </div>
+                    <div id="uploadStatus" style="margin-top: 10px; color: #6c757d; font-size: 0.9em;"></div>
+                </div>
+
+                <div class="section">
+                    <h2>⚙️ Quick Actions</h2>
+                    <button onclick="setDefaultCapacities()" class="btn btn-secondary" style="width: 100%; margin-bottom: 10px;">
+                        Set Default Capacities (+20%)
+                    </button>
+                    <button onclick="clearAllCapacities()" class="btn btn-danger" style="width: 100%;">
+                        Clear All Capacities
+                    </button>
+                </div>
             </div>
-            <div class="file-name" id="fileName"></div>
-            <div class="success-message" id="uploadSuccess">
-                ✓ Data uploaded successfully! Changes will appear on the dashboard.
+
+            <div class="content-area">
+                <h2 style="color: #003c72; margin-bottom: 20px; font-size: 1.6em;">Capacity Management</h2>
+                <div id="capacityManagement"></div>
             </div>
         </div>
-
-        <div class="controls">
-            <button onclick="setDefaultCapacities()" class="btn-secondary">Set Default Capacities (+20%)</button>
-            <button onclick="saveCapacities()" class="btn-primary">💾 Save All Changes</button>
-            <button onclick="clearAllCapacities()" class="btn-danger">Clear All Capacities</button>
-        </div>
-
-        <div class="dashboard" id="dashboard"></div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
     <script>
+        // YOUR FIREBASE CONFIGURATION - ALREADY SET UP!
+        const firebaseConfig = {
+            apiKey: "AIzaSyA5US45QlRkkIgNzvGY8NxOtgxhtBFrVV0",
+            authDomain: "db-test-4e542.firebaseapp.com",
+            databaseURL: "https://db-test-4e542-default-rtdb.firebaseio.com",
+            projectId: "db-test-4e542",
+            storageBucket: "db-test-4e542.firebasestorage.app",
+            messagingSenderId: "635686299111",
+            appId: "1:635686299111:web:44c438ded2deeb87fe0942"
+        };
+
+        // Initialize Firebase
+        let database;
+        let auth;
+        try {
+            firebase.initializeApp(firebaseConfig);
+            database = firebase.database();
+            auth = firebase.auth();
+            console.log("✅ Firebase initialized successfully");
+        } catch (error) {
+            console.error("❌ Firebase initialization error:", error);
+            alert("Firebase error: " + error.message);
+        }
+
+        // Check authentication status
+        auth.onAuthStateChanged((user) => {
+            if (!user) {
+                // Not logged in, redirect to login page
+                window.location.href = 'login.html?redirect=admin.html';
+            } else {
+                // User is logged in
+                console.log("✅ User authenticated:", user.email);
+                if (document.getElementById('userEmail')) {
+                    document.getElementById('userEmail').textContent = user.email;
+                }
+            }
+        });
+
+        // Sign out function
+        function signOut() {
+            if (confirm('Are you sure you want to sign out?')) {
+                auth.signOut().then(() => {
+                    window.location.href = 'login.html';
+                }).catch((error) => {
+                    alert('Error signing out: ' + error.message);
+                });
+            }
+        }
+
         let studentData = [];
         let capacities = {};
+        let selectedSubjects = [];
 
+        // Initial CSV data
         const initialCSVData = `Brand_Name,Company_Name,Textbox4,Textbox2,Textbox26,Textbox40
 Curro,Curro Rivonia,10,Accounting,12,2755
 Curro,Curro Rivonia,10,Advanced Programme English,2,2755
@@ -451,32 +573,22 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
 
         window.addEventListener('DOMContentLoaded', () => {
             parseCSV(initialCSVData);
-            loadCapacities();
-            renderDashboard();
+            loadFromFirebase();
         });
 
         document.getElementById('fileInput').addEventListener('change', (e) => {
             const file = e.target.files[0];
             if (file) {
-                document.getElementById('fileName').textContent = `Loaded: ${file.name}`;
                 const reader = new FileReader();
                 reader.onload = (event) => {
                     parseCSV(event.target.result);
-                    saveStudentData();
-                    renderDashboard();
-                    showSuccessMessage();
+                    document.getElementById('uploadStatus').textContent = `✓ Loaded: ${file.name}`;
+                    saveToFirebase();
+                    renderCapacityManagement();
                 };
                 reader.readAsText(file);
             }
         });
-
-        function showSuccessMessage() {
-            const msg = document.getElementById('uploadSuccess');
-            msg.classList.add('show');
-            setTimeout(() => {
-                msg.classList.remove('show');
-            }, 3000);
-        }
 
         function parseCSV(text) {
             const lines = text.trim().split('\n');
@@ -486,17 +598,13 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                 if (lines[i].trim()) {
                     const parts = lines[i].split(',');
                     if (parts.length >= 6) {
-                        const grade = parseInt(parts[2]);
-                        const subject = parts[3].trim();
-                        const count = parseInt(parts[4]);
-                        
                         studentData.push({
                             brand: parts[0].trim(),
                             school: parts[1].trim(),
-                            grade: grade,
-                            subject: subject,
-                            count: count,
-                            key: `${grade}-${subject}`
+                            grade: parseInt(parts[2]),
+                            subject: parts[3].trim(),
+                            count: parseInt(parts[4]),
+                            key: `${parts[2]}-${parts[3].trim()}`
                         });
                     }
                 }
@@ -507,36 +615,176 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             }
         }
 
-        function saveStudentData() {
-            localStorage.setItem('studentData', JSON.stringify(studentData));
-        }
+        async function saveToFirebase() {
+            if (!database) {
+                alert("Firebase not initialized properly");
+                return;
+            }
 
-        function loadCapacities() {
-            const saved = localStorage.getItem('subjectCapacities');
-            if (saved) {
-                capacities = JSON.parse(saved);
+            try {
+                await database.ref('studentData').set(studentData);
+                await database.ref('capacities').set(capacities);
+                alert("✅ Data saved to cloud successfully!");
+            } catch (error) {
+                console.error("Error saving to Firebase:", error);
+                alert("❌ Error saving to cloud: " + error.message);
             }
         }
 
-        function saveCapacities() {
-            localStorage.setItem('subjectCapacities', JSON.stringify(capacities));
-            saveStudentData();
-            alert('✓ All capacities saved successfully!');
+        async function loadFromFirebase() {
+            if (!database) return;
+
+            try {
+                const dataSnapshot = await database.ref('studentData').once('value');
+                const capSnapshot = await database.ref('capacities').once('value');
+                
+                if (dataSnapshot.exists()) {
+                    studentData = dataSnapshot.val();
+                }
+                
+                if (capSnapshot.exists()) {
+                    capacities = capSnapshot.val();
+                }
+
+                renderCapacityManagement();
+            } catch (error) {
+                console.error("Error loading from Firebase:", error);
+            }
+        }
+
+        function loadSubjectsForGrade() {
+            const grade = document.getElementById('admissionGrade').value;
+            const listDiv = document.getElementById('subjectsList');
+            
+            if (!grade) {
+                listDiv.innerHTML = '<p style="color: #6c757d; text-align: center;">Select a grade first</p>';
+                return;
+            }
+
+            const gradeSubjects = studentData.filter(s => s.grade === parseInt(grade));
+            
+            let html = '';
+            gradeSubjects.forEach(subject => {
+                const capacity = capacities[subject.key] || 0;
+                const available = capacity - subject.count;
+                const capInfo = capacity > 0 ? `(${subject.count}/${capacity})` : '(no limit set)';
+                
+                html += `
+                    <div class="subject-checkbox">
+                        <input type="checkbox" id="sub_${subject.key}" value="${subject.key}">
+                        <label for="sub_${subject.key}">
+                            ${subject.subject}
+                            <span class="capacity-info">${capInfo}</span>
+                        </label>
+                    </div>
+                `;
+            });
+
+            listDiv.innerHTML = html;
+        }
+
+        function checkCapacity() {
+            const grade = document.getElementById('admissionGrade').value;
+            if (!grade) {
+                alert("Please select a grade first");
+                return;
+            }
+
+            selectedSubjects = [];
+            const checkboxes = document.querySelectorAll('.subject-checkbox input[type="checkbox"]:checked');
+            
+            if (checkboxes.length === 0) {
+                alert("Please select at least one subject");
+                return;
+            }
+
+            checkboxes.forEach(cb => {
+                selectedSubjects.push(cb.value);
+            });
+
+            let canAdmit = true;
+            let fullSubjects = [];
+            let results = [];
+
+            selectedSubjects.forEach(key => {
+                const subject = studentData.find(s => s.key === key);
+                const capacity = capacities[key] || 0;
+                
+                if (capacity === 0) {
+                    results.push(`⚠️ ${subject.subject}: No capacity set`);
+                } else if (subject.count >= capacity) {
+                    canAdmit = false;
+                    fullSubjects.push(subject.subject);
+                    results.push(`❌ ${subject.subject}: FULL (${subject.count}/${capacity})`);
+                } else {
+                    const available = capacity - subject.count;
+                    results.push(`✅ ${subject.subject}: ${available} space${available > 1 ? 's' : ''} available`);
+                }
+            });
+
+            const resultDiv = document.getElementById('admissionResult');
+            const admitBtn = document.getElementById('admitBtn');
+
+            if (canAdmit && fullSubjects.length === 0) {
+                resultDiv.className = 'result-box success';
+                resultDiv.innerHTML = `
+                    <strong>✅ Student CAN be admitted!</strong><br><br>
+                    ${results.join('<br>')}
+                `;
+                admitBtn.style.display = 'block';
+            } else {
+                resultDiv.className = 'result-box error';
+                resultDiv.innerHTML = `
+                    <strong>❌ Cannot admit student</strong><br><br>
+                    ${results.join('<br>')}
+                    ${fullSubjects.length > 0 ? `<br><br><strong>Full subjects:</strong> ${fullSubjects.join(', ')}` : ''}
+                `;
+                admitBtn.style.display = 'none';
+            }
+        }
+
+        async function admitStudent() {
+            if (selectedSubjects.length === 0) return;
+
+            if (!confirm(`Admit student to ${selectedSubjects.length} subject(s)?\n\nThis will increase the student count by 1 for each selected subject.`)) {
+                return;
+            }
+
+            selectedSubjects.forEach(key => {
+                const subject = studentData.find(s => s.key === key);
+                if (subject) {
+                    subject.count++;
+                }
+            });
+
+            await saveToFirebase();
+            renderCapacityManagement();
+            
+            const resultDiv = document.getElementById('admissionResult');
+            resultDiv.className = 'result-box success';
+            resultDiv.innerHTML = `<strong>✅ Student admitted successfully!</strong><br>Counts updated and saved to cloud.`;
+            
+            document.getElementById('admitBtn').style.display = 'none';
+            
+            // Clear selections
+            document.querySelectorAll('.subject-checkbox input[type="checkbox"]').forEach(cb => cb.checked = false);
+            selectedSubjects = [];
         }
 
         function setDefaultCapacities() {
             studentData.forEach(item => {
                 capacities[item.key] = Math.ceil(item.count * 1.2);
             });
-            saveCapacities();
-            renderDashboard();
+            saveToFirebase();
+            renderCapacityManagement();
+            alert("✅ Default capacities set (+20% buffer)");
         }
 
         function clearAllCapacities() {
-            if (confirm('Are you sure you want to clear all capacity settings?')) {
+            if (confirm('Clear all capacity settings?')) {
                 capacities = {};
-                saveCapacities();
-                renderDashboard();
+                saveToFirebase();
+                renderCapacityManagement();
             }
         }
 
@@ -544,59 +792,61 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             capacities[key] = parseInt(value) || 0;
         }
 
-        function renderDashboard() {
+        function renderCapacityManagement() {
             const grades = [...new Set(studentData.map(d => d.grade))].sort();
-            const dashboardDiv = document.getElementById('dashboard');
-            dashboardDiv.innerHTML = '';
+            const div = document.getElementById('capacityManagement');
+            div.innerHTML = '';
 
             grades.forEach(grade => {
-                const gradeData = studentData.filter(d => d.grade === grade)
-                    .sort((a, b) => b.count - a.count);
+                const gradeData = studentData.filter(d => d.grade === grade).sort((a, b) => b.count - a.count);
 
-                const section = document.createElement('div');
-                section.className = 'grade-section';
-
-                let tableHTML = `
-                    <div class="grade-header">Grade ${grade}</div>
-                    <table class="subjects-table">
-                        <thead>
-                            <tr>
-                                <th>Subject</th>
-                                <th>Current Students</th>
-                                <th>Maximum Capacity</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+                let html = `
+                    <div class="grade-section">
+                        <div class="grade-header">Grade ${grade}</div>
+                        <table class="subjects-table">
+                            <thead>
+                                <tr>
+                                    <th>Subject</th>
+                                    <th>Current</th>
+                                    <th>Max Capacity</th>
+                                    <th>Status</th>
+                                </tr>
+                            </thead>
+                            <tbody>
                 `;
 
                 gradeData.forEach(item => {
                     const capacity = capacities[item.key] || 0;
+                    const percentage = capacity > 0 ? Math.round((item.count / capacity) * 100) : 0;
+                    let statusClass = 'status-available';
+                    let statusText = 'Available';
+                    
+                    if (capacity > 0) {
+                        if (item.count >= capacity) {
+                            statusClass = 'status-over';
+                            statusText = 'FULL';
+                        } else if (percentage >= 90) {
+                            statusClass = 'status-full';
+                            statusText = 'Near Full';
+                        }
+                    }
 
-                    tableHTML += `
+                    html += `
                         <tr>
-                            <td class="subject-name">${item.subject}</td>
+                            <td>${item.subject}</td>
                             <td><span class="current-count">${item.count}</span></td>
                             <td>
-                                <input 
-                                    type="number" 
-                                    class="capacity-input" 
-                                    value="${capacity}" 
-                                    min="0"
-                                    placeholder="Set max"
-                                    onchange="updateCapacity('${item.key}', this.value)"
-                                />
+                                <input type="number" class="capacity-input" value="${capacity}" 
+                                       min="0" placeholder="Set" 
+                                       onchange="updateCapacity('${item.key}', this.value); saveToFirebase();" />
                             </td>
+                            <td><span class="status-badge ${statusClass}">${statusText}</span></td>
                         </tr>
                     `;
                 });
 
-                tableHTML += `
-                        </tbody>
-                    </table>
-                `;
-
-                section.innerHTML = tableHTML;
-                dashboardDiv.appendChild(section);
+                html += `</tbody></table></div>`;
+                div.innerHTML += html;
             });
         }
     </script>

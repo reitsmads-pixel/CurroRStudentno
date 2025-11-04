@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Student Capacity System | Curro</title>
+    <title>Curro Capacity System</title>
     <style>
         * {
             margin: 0;
@@ -13,7 +13,7 @@
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f5f5f5;
+            background: linear-gradient(135deg, #003c72 0%, #005a9e 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -22,33 +22,32 @@
         }
 
         .container {
-            max-width: 1000px;
+            max-width: 1100px;
             width: 100%;
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
             overflow: hidden;
-            border-top: 6px solid #f6b242;
         }
 
         header {
             background: #003c72;
             color: white;
-            padding: 40px;
+            padding: 50px 40px;
             text-align: center;
+            position: relative;
         }
 
-        header .logo {
-            font-size: 3.5em;
+        .logo {
+            font-size: 4em;
             font-weight: 700;
             color: #f6b242;
             margin-bottom: 15px;
         }
 
         header h1 {
-            font-size: 2.2em;
-            margin-bottom: 10px;
-            font-weight: 600;
+            font-size: 2.5em;
+            margin-bottom: 12px;
         }
 
         header p {
@@ -57,167 +56,171 @@
         }
 
         .content {
-            padding: 40px;
+            padding: 50px 40px;
         }
 
         .intro {
             text-align: center;
-            margin-bottom: 35px;
+            margin-bottom: 45px;
         }
 
         .intro h2 {
             color: #003c72;
-            font-size: 1.8em;
-            margin-bottom: 10px;
+            font-size: 2em;
+            margin-bottom: 15px;
         }
 
         .intro p {
             color: #6c757d;
-            font-size: 1.05em;
+            font-size: 1.1em;
+            line-height: 1.7;
+            max-width: 700px;
+            margin: 0 auto;
         }
 
-        .options {
+        .features {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin: 40px 0;
+            max-width: 900px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .option-card {
+        .feature {
             background: #f8f9fa;
-            border-radius: 10px;
-            padding: 30px;
+            padding: 25px;
+            border-radius: 12px;
             text-align: center;
-            transition: all 0.3s;
             border: 2px solid #e0e0e0;
+            transition: all 0.3s;
         }
 
-        .option-card:hover {
+        .feature:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
             border-color: #f6b242;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
         }
 
-        .option-card .icon {
-            font-size: 4em;
-            margin-bottom: 20px;
-        }
-
-        .option-card h2 {
-            font-size: 1.6em;
-            color: #003c72;
+        .feature-icon {
+            font-size: 3em;
             margin-bottom: 15px;
         }
 
-        .option-card p {
-            color: #6c757d;
-            margin-bottom: 20px;
-            line-height: 1.6;
-            font-size: 0.98em;
-        }
-
-        .option-card .features {
-            text-align: left;
-            margin-bottom: 25px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-        }
-
-        .option-card .features li {
-            color: #495057;
+        .feature h3 {
+            color: #003c72;
+            font-size: 1.3em;
             margin-bottom: 10px;
-            padding-left: 5px;
+        }
+
+        .feature p {
+            color: #6c757d;
+            line-height: 1.6;
             font-size: 0.95em;
         }
 
-        .option-card a {
-            display: inline-block;
-            padding: 14px 40px;
-            color: white;
-            text-decoration: none;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 1.05em;
-            transition: all 0.2s;
+        .cta-section {
+            text-align: center;
+            margin: 60px 0 30px;
         }
 
-        .option-card.admin a {
-            background: #003c72;
-        }
-
-        .option-card.admin a:hover {
-            background: #002a54;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 59, 92, 0.3);
-        }
-
-        .option-card.dashboard a {
-            background: #f6b242;
-        }
-
-        .option-card.dashboard a:hover {
-            background: #d99a2e;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(246, 178, 66, 0.3);
-        }
-
-        .info-box {
-            background: #fff3e0;
-            border-left: 4px solid #f6b242;
-            padding: 20px 25px;
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
             margin-top: 30px;
-            border-radius: 6px;
         }
 
-        .info-box h3 {
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 18px 40px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-decoration: none;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+        }
+
+        .btn-primary {
+            background: #f6b242;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #d99a2e;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(246, 178, 66, 0.4);
+        }
+
+        .btn-secondary {
+            background: #003c72;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #002a54;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 60, 114, 0.4);
+        }
+
+        .btn-outline {
+            background: white;
             color: #003c72;
-            margin-bottom: 10px;
-            font-size: 1.2em;
+            border: 2px solid #003c72;
         }
 
-        .info-box p {
-            color: #495057;
-            line-height: 1.7;
-            font-size: 0.98em;
-        }
-
-        .info-box strong {
-            color: #003c72;
+        .btn-outline:hover {
+            background: #003c72;
+            color: white;
         }
 
         footer {
             background: #f8f9fa;
             padding: 25px;
             text-align: center;
-            color: #6c757d;
-            border-top: 1px solid #e0e0e0;
+            border-top: 2px solid #e0e0e0;
         }
 
         footer p {
+            color: #6c757d;
             margin: 5px 0;
-            font-size: 0.95em;
-        }
-
-        footer strong {
-            color: #003c72;
         }
 
         @media (max-width: 768px) {
-            header .logo {
-                font-size: 2.5em;
+            header {
+                padding: 35px 25px;
+            }
+
+            .logo {
+                font-size: 3em;
             }
 
             header h1 {
                 font-size: 1.8em;
             }
 
-            .options {
+            .content {
+                padding: 30px 25px;
+            }
+
+            .features {
                 grid-template-columns: 1fr;
             }
 
-            .content {
-                padding: 25px;
+            .cta-buttons {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
             }
         }
     </style>
@@ -226,70 +229,59 @@
     <div class="container">
         <header>
             <div class="logo">CURRO</div>
-            <h1>Student Capacity System</h1>
-            <p>Rivonia Campus</p>
+            <h1>Student Capacity Management System</h1>
+            <p>Real-time enrollment tracking across all devices</p>
         </header>
 
         <div class="content">
             <div class="intro">
-                <h2>Select Your Access Level</h2>
-                <p>Choose the appropriate page based on your role</p>
+                <h2>Welcome to Your Capacity System</h2>
+                <p>Check student admissions in real-time and manage enrollment capacity across all your subjects and grades.</p>
             </div>
 
-            <div class="options">
-                <div class="option-card admin">
-                    <div class="icon">🔧</div>
-                    <h2>Admin Panel</h2>
-                    <p>For administrators and registrars managing capacity settings and student data</p>
-                    <div class="features">
-                        <ul>
-                            <li>✓ Upload CSV reports</li>
-                            <li>✓ Set maximum capacities</li>
-                            <li>✓ Manage all settings</li>
-                            <li>✓ Save and export data</li>
-                        </ul>
-                    </div>
-                    <a href="admin.html">Open Admin Panel</a>
+            <div class="features">
+                <div class="feature">
+                    <div class="feature-icon">✅</div>
+                    <h3>Check Admissions</h3>
+                    <p>Select grade and subjects to instantly check if a new student can be admitted</p>
                 </div>
-
-                <div class="option-card dashboard">
-                    <div class="icon">📊</div>
-                    <h2>View Dashboard</h2>
-                    <p>For teachers and staff to monitor current capacity status with visual indicators</p>
-                    <div class="features">
-                        <ul>
-                            <li>✓ View capacity status</li>
-                            <li>✓ Color-coded indicators</li>
-                            <li>✓ Print-ready reports</li>
-                            <li>✓ Real-time updates</li>
-                        </ul>
-                    </div>
-                    <a href="dashboard.html">View Dashboard</a>
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Visual Dashboard</h3>
+                    <p>Color-coded capacity bars make it easy to see which subjects are filling up</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">➕</div>
+                    <h3>One-Click Admission</h3>
+                    <p>Admit students and update counts automatically with a single click</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">📤</div>
+                    <h3>CSV Updates</h3>
+                    <p>Upload reports periodically to sync with actual enrollment numbers</p>
                 </div>
             </div>
 
-            <div class="info-box">
-                <h3>📖 Getting Started</h3>
-                <p>
-                    <strong>First-time users:</strong> Start with the <strong>Admin Panel</strong> to configure your capacity limits. 
-                    Use the "Set Default Capacities" button for quick setup, then save your changes. 
-                    After configuration, access the <strong>Dashboard</strong> to view beautiful visual reports of your capacity status.
-                </p>
+            <div class="cta-section">
+                <h2 style="color: #003c72; margin-bottom: 20px;">Get Started Now</h2>
+                <div class="cta-buttons">
+                    <a href="login.html?redirect=admin.html" class="btn btn-primary">
+                        <span>🔧</span>
+                        <span>Admin Panel</span>
+                    </a>
+                    <a href="login.html?redirect=dashboard.html" class="btn btn-secondary">
+                        <span>📊</span>
+                        <span>View Dashboard</span>
+                    </a>
+                </div>
             </div>
 
-            <div class="info-box" style="background: #e8f5e9; border-color: #4caf50; margin-top: 20px;">
-                <h3>💡 Pro Tip</h3>
-                <p>
-                    Bookmark both pages! Use the Admin Panel for periodic updates and capacity management, 
-                    while the Dashboard is perfect for daily monitoring and sharing with department heads.
-                </p>
-            </div>
         </div>
 
         <footer>
-            <p><strong>Need Help?</strong> Refer to README.md for detailed instructions</p>
-            <p style="margin-top: 12px;">Data stored locally • No internet required • Secure & Private</p>
-            <p style="margin-top: 8px; color: #f6b242; font-weight: 600;">Curro Rivonia © 2025</p>
+            <p><strong>Curro Rivonia</strong> | Student Capacity Management System</p>
+            <p style="margin-top: 10px;">Real-time Admission Tracking</p>
+            <p style="margin-top: 8px; color: #f6b242; font-weight: 600;">© 2025</p>
         </footer>
     </div>
 </body>
