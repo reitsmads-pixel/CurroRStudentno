@@ -1750,7 +1750,7 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             // Update selected subjects
             const grade = parseInt(document.getElementById('admissionGrade').value);
             const afrikaansSubject = studentData.find(s => s.grade === grade && s.subject === 'Afrikaans First Additional Language');
-            const zulu Subject = studentData.find(s => s.grade === grade && s.subject === 'isiZulu First Additional Language');
+            const zuluSubject = studentData.find(s => s.grade === grade && s.subject === 'isiZulu First Additional Language');
             
             // Remove any existing language subjects
             selectedSubjects = selectedSubjects.filter(key => {
