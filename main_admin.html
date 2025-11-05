@@ -1265,7 +1265,7 @@
 
         auth.onAuthStateChanged((user) => {
             if (!user) {
-                window.location.href = 'login.html?redirect=admin.html';
+                window.location.href = 'login.html?redirect=main_admin.html';
             } else {
                 document.getElementById('userEmail').textContent = user.email;
             }
@@ -1399,7 +1399,11 @@ Curro,Curro Rivonia,9,Natural Sciences,64,2755
 Curro,Curro Rivonia,9,Social Sciences,64,2755`;
 
         window.addEventListener('DOMContentLoaded', () => {
+            console.log("🚀 Page loaded, initializing...");
+            console.log("📄 Parsing initial CSV data...");
             parseCSV(initialCSVData);
+            console.log(`✅ Parsed ${studentData.length} records from CSV`);
+            console.log("☁️ Loading data from Firebase (will override CSV if exists)...");
             loadFromFirebase();
         });
 
@@ -1445,27 +1449,45 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
         }
 
         async function saveToFirebase() {
-            if (!database) return;
+            if (!database) {
+                console.error("❌ Database not initialized");
+                return;
+            }
 
             try {
+                console.log("💾 Saving to Firebase...");
                 showLoading('Saving to cloud...');
+                
                 await database.ref('studentData').set(studentData);
+                console.log(`✅ Saved ${studentData.length} student records`);
+                
                 await database.ref('capacities').set(capacities);
+                console.log(`✅ Saved ${Object.keys(capacities).length} capacity settings`);
+                
                 await database.ref('subjectGroups').set(subjectGroups);
+                console.log("✅ Saved subject groups");
+                
                 await database.ref('emailRecipients').set(emailRecipients);
+                console.log(`✅ Saved ${emailRecipients.length} email recipients`);
+                
                 hideLoading();
                 showAlert('success', '✅ Data saved to cloud successfully!');
+                console.log("✅ Firebase save complete");
             } catch (error) {
-                console.error("Error saving to Firebase:", error);
+                console.error("❌ Error saving to Firebase:", error);
                 hideLoading();
                 showAlert('error', '❌ Error saving to cloud: ' + error.message);
             }
         }
 
         async function loadFromFirebase() {
-            if (!database) return;
+            if (!database) {
+                console.error("❌ Database not initialized");
+                return;
+            }
 
             try {
+                console.log("🔄 Starting Firebase data load...");
                 showLoading('Loading data from cloud...');
                 
                 const [dataSnap, capSnap, groupsSnap, emailSnap] = await Promise.all([
@@ -1475,20 +1497,50 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                     database.ref('emailRecipients').once('value')
                 ]);
                 
-                if (dataSnap.exists()) studentData = dataSnap.val();
-                if (capSnap.exists()) capacities = capSnap.val();
-                if (groupsSnap.exists()) subjectGroups = groupsSnap.val();
+                console.log("📦 Snapshots received:", {
+                    studentData: dataSnap.exists(),
+                    capacities: capSnap.exists(),
+                    subjectGroups: groupsSnap.exists(),
+                    emailRecipients: emailSnap.exists()
+                });
+                
+                if (dataSnap.exists()) {
+                    studentData = dataSnap.val();
+                    console.log(`✅ Loaded ${studentData.length} student records`);
+                } else {
+                    console.log("⚠️ No student data in Firebase, using initial CSV data");
+                }
+                
+                if (capSnap.exists()) {
+                    capacities = capSnap.val();
+                    console.log(`✅ Loaded ${Object.keys(capacities).length} capacity settings`);
+                } else {
+                    console.log("⚠️ No capacities in Firebase");
+                }
+                
+                if (groupsSnap.exists()) {
+                    subjectGroups = groupsSnap.val();
+                    console.log("✅ Loaded subject groups");
+                } else {
+                    console.log("⚠️ No subject groups in Firebase");
+                }
+                
                 if (emailSnap.exists()) {
                     emailRecipients = emailSnap.val();
                     document.getElementById('emailRecipients').value = emailRecipients.join('\n');
+                    console.log(`✅ Loaded ${emailRecipients.length} email recipients`);
+                } else {
+                    console.log("⚠️ No email recipients in Firebase");
                 }
 
                 renderCapacityManagement();
                 updateStats();
                 hideLoading();
+                console.log("✅ Firebase data load complete");
             } catch (error) {
-                console.error("Error loading from Firebase:", error);
+                console.error("❌ Error loading from Firebase:", error);
                 hideLoading();
+                showAlert('error', '❌ Failed to load data from Firebase. Check console for details.');
             }
         }
 
