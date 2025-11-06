@@ -1317,48 +1317,100 @@
         }
 
         auth.onAuthStateChanged(async (user) => {
+            console.log("🔐 Auth state changed:", user ? user.email : "no user");
+            
             if (!user) {
+                console.log("❌ No user authenticated, redirecting to login...");
                 window.location.href = 'login.html?redirect=main_admin.html';
             } else {
+                console.log("✅ User authenticated:", user.email);
                 document.getElementById('userEmail').textContent = user.email;
+                
+                // Show loading while we set up
+                showLoading('Setting up your workspace...');
                 
                 // Load user role from Firebase
                 try {
+                    console.log(`📥 Loading user role from Firebase for UID: ${user.uid}`);
                     const roleSnapshot = await database.ref(`users/${user.uid}/role`).once('value');
-                    const userRole = roleSnapshot.val() || 'admission'; // Default to 'admission' if not set
-                    console.log(`👤 User role: ${userRole}`);
+                    const userRole = roleSnapshot.val() || 'admin'; // Default to 'admin' if not set
+                    console.log(`👤 User role loaded: ${userRole}`);
                     
                     // Apply role-based access control
+                    console.log("🔒 Applying role-based access...");
                     applyRoleAccess(userRole);
                     
                     // NOW load data from Firebase (after authentication is complete)
                     console.log("☁️ Loading data from Firebase...");
-                    loadFromFirebase();
+                    await loadFromFirebase();
+                    
+                    hideLoading();
+                    console.log("✅ Initialization complete!");
+                    
                 } catch (error) {
-                    console.error("Error loading user role:", error);
-                    // Default to admission role if error
-                    applyRoleAccess('admission');
+                    console.error("❌ Error during initialization:", error);
+                    hideLoading();
+                    
+                    // Show error to user
+                    showAlert('error', `⚠️ Setup error: ${error.message}. Defaulting to admin access.`);
+                    
+                    // Default to admin role if error
+                    applyRoleAccess('admin');
+                    
                     // Still try to load data
-                    loadFromFirebase();
+                    try {
+                        await loadFromFirebase();
+                    } catch (loadError) {
+                        console.error("❌ Error loading data:", loadError);
+                        showAlert('error', `❌ Failed to load data: ${loadError.message}`);
+                    }
                 }
             }
         });
         
         function applyRoleAccess(role) {
+            console.log(`🔒 Applying role-based access for: ${role}`);
+            
             // Hide/show tabs based on role
+            let visibleTabsCount = 0;
             document.querySelectorAll('.tab-btn').forEach(btn => {
-                const allowedRoles = btn.getAttribute('data-role').split(',');
-                if (!allowedRoles.includes(role)) {
-                    btn.style.display = 'none';
-                } else {
+                const dataRole = btn.getAttribute('data-role');
+                console.log(`Tab "${btn.textContent.trim()}" has data-role: ${dataRole}`);
+                
+                if (!dataRole) {
+                    // If no data-role attribute, show for all users
                     btn.style.display = '';
+                    visibleTabsCount++;
+                    console.log(`✅ Tab "${btn.textContent.trim()}" visible (no role restriction)`);
+                } else {
+                    const allowedRoles = dataRole.split(',');
+                    if (allowedRoles.includes(role)) {
+                        btn.style.display = '';
+                        visibleTabsCount++;
+                        console.log(`✅ Tab "${btn.textContent.trim()}" visible for role: ${role}`);
+                    } else {
+                        btn.style.display = 'none';
+                        console.log(`❌ Tab "${btn.textContent.trim()}" hidden for role: ${role}`);
+                    }
                 }
             });
+            
+            console.log(`📊 Total visible tabs: ${visibleTabsCount}`);
+            
+            // Automatically activate first visible tab
+            const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
+            if (firstVisibleTab) {
+                setTimeout(() => {
+                    firstVisibleTab.click();
+                    console.log(`✅ Auto-activated first visible tab: ${firstVisibleTab.textContent.trim()}`);
+                }, 100);
+            } else {
+                console.error('❌ No visible tabs found!');
+            }
             
             // Hide/show navigation buttons
             if (role === 'admission') {
                 // Admission users can only save their work, not manage settings
-                const saveBtn = document.querySelector('button[onclick="saveToFirebase()"]');
                 const reloadBtn = document.querySelector('button[onclick="loadFromFirebase()"]');
                 if (reloadBtn) reloadBtn.style.display = 'none';
             }
@@ -2594,12 +2646,38 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
         }
 
         function renderCapacityManagement() {
-            const grades = [...new Set(studentData.map(d => d.grade))].sort((a, b) => b - a); // Sort descending: 12, 11, 10... 4
+            console.log("🎨 renderCapacityManagement() called");
             const div = document.getElementById('capacityManagement');
+            if (!div) {
+                console.error("❌ capacityManagement div not found!");
+                alert("ERROR: Cannot find capacityManagement container. Please contact support.");
+                return;
+            }
+            
+            console.log(`📊 studentData length: ${studentData ? studentData.length : 'null'}`);
+            
+            if (!studentData || studentData.length === 0) {
+                console.warn("⚠️ No student data to render!");
+                div.innerHTML = `
+                    <div style="padding: 40px; text-align: center; background: #fff3cd; border-radius: 8px; margin: 20px;">
+                        <h3 style="color: #856404;">⚠️ No Data Available</h3>
+                        <p style="color: #856404; margin: 10px 0;">Student data has not been loaded yet.</p>
+                        <p style="color: #6c757d; font-size: 0.9em;">The system will automatically load data from Firebase after authentication.</p>
+                        <button onclick="loadFromFirebase()" class="btn btn-primary" style="margin-top: 15px;">
+                            🔄 Reload Data
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+            
+            const grades = [...new Set(studentData.map(d => d.grade))].sort((a, b) => b - a); // Sort descending: 12, 11, 10... 4
+            console.log(`📋 Rendering ${grades.length} grades: ${grades.join(', ')}`);
             div.innerHTML = '';
 
             grades.forEach(grade => {
                 const gradeData = studentData.filter(d => d.grade === grade).sort((a, b) => b.count - a.count);
+                console.log(`  Grade ${grade}: ${gradeData.length} subjects`);
 
                 let html = `
                     <div class="grade-section" id="grade-${grade}">
@@ -2658,6 +2736,7 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                 div.innerHTML += html;
             });
             
+            console.log("✅ renderCapacityManagement() complete");
             updateStats();
         }
 
