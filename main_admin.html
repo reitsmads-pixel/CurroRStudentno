@@ -1299,19 +1299,13 @@
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
     <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    
+    <!-- Load configuration from external file -->
+    <script src="config.js"></script>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyA5US45QlRkkIgNzvGY8NxOtgxhtBFrVV0",
-            authDomain: "db-test-4e542.firebaseapp.com",
-            databaseURL: "https://db-test-4e542-default-rtdb.firebaseio.com",
-            projectId: "db-test-4e542",
-            storageBucket: "db-test-4e542.firebasestorage.app",
-            messagingSenderId: "635686299111",
-            appId: "1:635686299111:web:44c438ded2deeb87fe0942"
-        };
-
+        // Firebase Configuration loaded from config.js
+        
         let database, auth;
         try {
             firebase.initializeApp(firebaseConfig);
@@ -1336,10 +1330,16 @@
                     
                     // Apply role-based access control
                     applyRoleAccess(userRole);
+                    
+                    // NOW load data from Firebase (after authentication is complete)
+                    console.log("☁️ Loading data from Firebase...");
+                    loadFromFirebase();
                 } catch (error) {
                     console.error("Error loading user role:", error);
                     // Default to admission role if error
                     applyRoleAccess('admission');
+                    // Still try to load data
+                    loadFromFirebase();
                 }
             }
         });
@@ -1387,9 +1387,7 @@
         let currentStep = 1;
         let currentReferenceNumber = '';
 
-        const EMAILJS_PUBLIC_KEY = 'Vw5a0CwDdKhv90Z-N';
-        const EMAILJS_SERVICE_ID = 'service_wu805b1';
-        const EMAILJS_TEMPLATE_ID = 'template_4dhxbfk';
+        // EmailJS configuration loaded from config.js
 
         if (typeof emailjs !== 'undefined') {
             emailjs.init(EMAILJS_PUBLIC_KEY);
@@ -1499,8 +1497,8 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             console.log("📄 Parsing initial CSV data...");
             parseCSV(initialCSVData);
             console.log(`✅ Parsed ${studentData.length} records from CSV`);
-            console.log("☁️ Loading data from Firebase (will override CSV if exists)...");
-            loadFromFirebase();
+            console.log("⏳ Waiting for authentication before loading from Firebase...");
+            // loadFromFirebase() is now called after authentication completes
         });
 
         document.getElementById('fileInput').addEventListener('change', (e) => {
