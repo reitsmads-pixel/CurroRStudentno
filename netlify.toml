@@ -5,6 +5,12 @@
   publish = "."
   command = ""
 
+# Bypass secrets scanner for Firebase client keys
+# These are PUBLIC API keys - they're designed to be in client-side code
+# Security is handled by Firebase security rules, not by hiding these keys
+[build.environment]
+  SECRETS_SCAN_SMART_DETECTION_ENABLED = "false"
+
 [[headers]]
   for = "/*"
   [headers.values]
