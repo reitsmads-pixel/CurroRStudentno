@@ -714,6 +714,9 @@
                 if (document.getElementById('userEmail')) {
                     document.getElementById('userEmail').textContent = user.email;
                 }
+                // NOW setup Firebase listeners (after authentication)
+                console.log("☁️ Setting up Firebase data listeners...");
+                setupFirebaseListeners();
             }
         });
 
@@ -818,7 +821,8 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
         // Initialize
         window.addEventListener('DOMContentLoaded', () => {
             parseCSV(initialCSVData);
-            setupFirebaseListeners();
+            console.log("⏳ Waiting for authentication before setting up Firebase listeners...");
+            // setupFirebaseListeners() is now called after authentication completes
         });
 
         // Parse CSV
