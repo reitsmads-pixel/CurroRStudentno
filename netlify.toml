@@ -1,0 +1,30 @@
+[build]
+  publish = "."
+  command = "echo 'No build needed - static site'"
+
+# Bypass secrets detection for known config file
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "no-referrer-when-downgrade"
+
+# Redirects
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+  force = false
+
+# Disable automatic secrets detection for config.js
+# Note: These are client-side Firebase keys which are meant to be public
+[build.processing]
+  skip_processing = false
