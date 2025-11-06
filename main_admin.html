@@ -826,6 +826,39 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            cursor: pointer;
+            user-select: none;
+        }
+        
+        .grade-header:hover {
+            background: #002a54;
+        }
+        
+        .grade-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .grade-toggle-icon {
+            transition: transform 0.3s;
+            font-size: 0.9em;
+        }
+        
+        .grade-section.collapsed .grade-toggle-icon {
+            transform: rotate(-90deg);
+        }
+        
+        .grade-content {
+            transition: max-height 0.3s ease-out, opacity 0.3s ease-out;
+            max-height: 5000px;
+            opacity: 1;
+            overflow: hidden;
+        }
+        
+        .grade-section.collapsed .grade-content {
+            max-height: 0;
+            opacity: 0;
         }
 
         .grade-actions {
@@ -942,16 +975,16 @@
         </div>
 
         <div class="tab-navigation">
-            <button class="tab-btn active" onclick="switchTab('admission')">
+            <button class="tab-btn active" onclick="switchTab('admission')" data-role="admission,admin">
                 ✅ Student Admission
             </button>
-            <button class="tab-btn" onclick="switchTab('capacity')">
+            <button class="tab-btn" onclick="switchTab('capacity')" data-role="admin">
                 📊 Capacity Management
             </button>
-            <button class="tab-btn" onclick="switchTab('groups')">
+            <button class="tab-btn" onclick="switchTab('groups')" data-role="admin">
                 🔢 Subject Groups
             </button>
-            <button class="tab-btn" onclick="switchTab('settings')">
+            <button class="tab-btn" onclick="switchTab('settings')" data-role="admin">
                 ⚙️ Settings
             </button>
         </div>
@@ -1198,6 +1231,32 @@
         <!-- Settings Tab -->
         <div id="settingsTab" class="tab-content">
             <div class="form-card">
+                <h2>👥 User Role Management</h2>
+                <p style="color: #6c757d; margin-bottom: 15px;">Set user roles for access control. Admin users have full access, while Admission users can only access the dashboard and student admission.</p>
+                
+                <div class="form-group">
+                    <label>User Email</label>
+                    <input type="email" id="roleUserEmail" placeholder="user@example.com" />
+                </div>
+                
+                <div class="form-group">
+                    <label>Role</label>
+                    <select id="roleSelect">
+                        <option value="admission">Admission (Dashboard + Student Admission only)</option>
+                        <option value="admin">Admin (Full Access)</option>
+                    </select>
+                </div>
+                
+                <button onclick="setUserRole()" class="btn btn-success">
+                    👤 Set User Role
+                </button>
+                
+                <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 6px;">
+                    <strong>📝 Note:</strong> To set roles, you need the user's UID. First, have the user log in once, then use Firebase Console → Authentication to find their UID. Then update Firebase Database manually at: <code>/users/{UID}/role</code>
+                </div>
+            </div>
+
+            <div class="form-card">
                 <h2>📧 Email Notification Settings</h2>
                 <div class="form-group">
                     <label>Recipient Email Addresses</label>
@@ -1263,13 +1322,50 @@
             console.error("❌ Firebase initialization error:", error);
         }
 
-        auth.onAuthStateChanged((user) => {
+        auth.onAuthStateChanged(async (user) => {
             if (!user) {
                 window.location.href = 'login.html?redirect=main_admin.html';
             } else {
                 document.getElementById('userEmail').textContent = user.email;
+                
+                // Load user role from Firebase
+                try {
+                    const roleSnapshot = await database.ref(`users/${user.uid}/role`).once('value');
+                    const userRole = roleSnapshot.val() || 'admission'; // Default to 'admission' if not set
+                    console.log(`👤 User role: ${userRole}`);
+                    
+                    // Apply role-based access control
+                    applyRoleAccess(userRole);
+                } catch (error) {
+                    console.error("Error loading user role:", error);
+                    // Default to admission role if error
+                    applyRoleAccess('admission');
+                }
             }
         });
+        
+        function applyRoleAccess(role) {
+            // Hide/show tabs based on role
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                const allowedRoles = btn.getAttribute('data-role').split(',');
+                if (!allowedRoles.includes(role)) {
+                    btn.style.display = 'none';
+                } else {
+                    btn.style.display = '';
+                }
+            });
+            
+            // Hide/show navigation buttons
+            if (role === 'admission') {
+                // Admission users can only save their work, not manage settings
+                const saveBtn = document.querySelector('button[onclick="saveToFirebase()"]');
+                const reloadBtn = document.querySelector('button[onclick="loadFromFirebase()"]');
+                if (reloadBtn) reloadBtn.style.display = 'none';
+            }
+            
+            // Store role globally for other checks
+            window.currentUserRole = role;
+        }
 
         function signOut() {
             if (confirm('Are you sure you want to sign out?')) {
@@ -1750,7 +1846,7 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             // Update selected subjects
             const grade = parseInt(document.getElementById('admissionGrade').value);
             const afrikaansSubject = studentData.find(s => s.grade === grade && s.subject === 'Afrikaans First Additional Language');
-            const zuluSubject = studentData.find(s => s.grade === grade && s.subject === 'isiZulu First Additional Language');
+            const zulu Subject = studentData.find(s => s.grade === grade && s.subject === 'isiZulu First Additional Language');
             
             // Remove any existing language subjects
             selectedSubjects = selectedSubjects.filter(key => {
@@ -2255,6 +2351,18 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
             saveToFirebase();
             showAlert('success', `✅ Email settings saved! ${emailRecipients.length} recipient(s) configured.`);
         }
+        
+        async function setUserRole() {
+            const email = document.getElementById('roleUserEmail').value.trim();
+            const role = document.getElementById('roleSelect').value;
+            
+            if (!email) {
+                showAlert('error', '❌ Please enter a user email');
+                return;
+            }
+            
+            showAlert('success', `ℹ️ To set role for ${email}:\n1. Go to Firebase Console → Authentication\n2. Find the user and copy their UID\n3. Go to Database → users/{UID}/role\n4. Set value to: ${role}`);
+        }
 
         // Subject Groups Management
         function loadGroupConfiguration() {
@@ -2481,9 +2589,14 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
         function updateCapacity(key, value) {
             capacities[key] = parseInt(value) || 0;
         }
+        
+        function toggleGrade(grade) {
+            const section = document.getElementById(`grade-${grade}`);
+            section.classList.toggle('collapsed');
+        }
 
         function renderCapacityManagement() {
-            const grades = [...new Set(studentData.map(d => d.grade))].sort();
+            const grades = [...new Set(studentData.map(d => d.grade))].sort((a, b) => b - a); // Sort descending: 12, 11, 10... 4
             const div = document.getElementById('capacityManagement');
             div.innerHTML = '';
 
@@ -2491,25 +2604,24 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                 const gradeData = studentData.filter(d => d.grade === grade).sort((a, b) => b.count - a.count);
 
                 let html = `
-                    <div class="grade-section">
-                        <div class="grade-header">
-                            <span>Grade ${grade}</span>
-                            <div class="grade-actions">
-                                <button onclick="setGradeCapacity(${grade}, 1.1)" class="btn btn-secondary">+10%</button>
-                                <button onclick="setGradeCapacity(${grade}, 1.2)" class="btn btn-secondary">+20%</button>
-                                <button onclick="setGradeCapacity(${grade}, 1.3)" class="btn btn-secondary">+30%</button>
+                    <div class="grade-section" id="grade-${grade}">
+                        <div class="grade-header" onclick="toggleGrade(${grade})">
+                            <div class="grade-title">
+                                <span class="grade-toggle-icon">▼</span>
+                                <span>Grade ${grade}</span>
                             </div>
                         </div>
-                        <table class="subjects-table">
-                            <thead>
-                                <tr>
-                                    <th>Subject</th>
-                                    <th>Current</th>
-                                    <th>Max Capacity</th>
-                                    <th>Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
+                        <div class="grade-content">
+                            <table class="subjects-table">
+                                <thead>
+                                    <tr>
+                                        <th>Subject</th>
+                                        <th>Current</th>
+                                        <th>Max Capacity</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                 `;
 
                 gradeData.forEach(item => {
@@ -2519,18 +2631,9 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                     let statusText = 'Available';
                     
                     if (capacity > 0) {
-                        if (item.count > capacity) {
-                            statusClass = 'status-over';
-                            statusText = 'OVER';
-                        } else if (item.count >= capacity) {
+                        if (percentage >= 100) {
                             statusClass = 'status-full';
                             statusText = 'FULL';
-                        } else if (percentage >= 90) {
-                            statusClass = 'status-full';
-                            statusText = 'Near Full';
-                        } else if (percentage >= 70) {
-                            statusClass = 'status-full';
-                            statusText = 'High';
                         }
                     }
 
@@ -2548,7 +2651,12 @@ Curro,Curro Rivonia,9,Social Sciences,64,2755`;
                     `;
                 });
 
-                html += `</tbody></table></div>`;
+                html += `
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                `;
                 div.innerHTML += html;
             });
             
