@@ -1331,18 +1331,16 @@
                 
 // Load user role from Firebase
     try {
-        console.log(`📥 Loading user role from Firebase for UID: ${user.uid}`);
-        const roleSnapshot = await database.ref(`users/${user.uid}/role`).once('value');
-        const userRole = roleSnapshot.val() || 'admin';
-        console.log(`👤 User role loaded: "${userRole}" (type: ${typeof userRole})`);
-        
-        // FIRST: Load data from Firebase
-        console.log("☁️ Loading data from Firebase...");
-        await loadFromFirebase();  // This renders everything
-        
-        // THEN: Apply role-based access control (AFTER data is loaded)
-        console.log("🔒 Applying role-based access...");
-        applyRoleAccess(userRole);
+const userRole = roleSnapshot.val() || 'admin';
+console.log(`👤 User role loaded: "${userRole}" (type: ${typeof userRole})`);
+
+// ✅ FIRST: Load data from Firebase
+console.log("☁️ Loading data from Firebase...");
+await loadFromFirebase();  // ✅ NOW FIRST - renders all content
+
+// ✅ THEN: Apply role-based access control
+console.log("🔒 Applying role-based access...");
+applyRoleAccess(userRole);  // ✅ NOW SECOND - hides/shows tabs
 
                     
                     hideLoading();
