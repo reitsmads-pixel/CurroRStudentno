@@ -1384,9 +1384,10 @@
                 console.log(`\n📋 Checking tab: "${tabName}"`);
                 console.log(`   data-role attribute: "${dataRole}"`);
                 
-                if (!dataRole) {
+ if (!dataRole) {
                     // If no data-role attribute, show for all users
-                    btn.style.display = '';
+                    btn.style.display = 'inline-flex';
+                    btn.style.visibility = 'visible';
                     visibleTabsCount++;
                     console.log(`   ✅ VISIBLE (no role restriction)`);
                 } else {
@@ -1396,20 +1397,28 @@
                     console.log(`   Checking if "${normalizedRole}" is in allowed roles...`);
                     
                     if (allowedRoles.includes(normalizedRole)) {
-                        btn.style.display = '';
+                        btn.style.display = 'inline-flex';
+                        btn.style.visibility = 'visible';
                         visibleTabsCount++;
                         console.log(`   ✅ VISIBLE (role match found)`);
                     } else {
                         btn.style.display = 'none';
+                        btn.style.visibility = 'hidden';
                         console.log(`   ❌ HIDDEN (role not allowed)`);
                     }
                 }
+
             });
             
             console.log(`\n📊 Summary: ${visibleTabsCount} tabs visible for role "${normalizedRole}"`);
             
-            // Automatically activate first visible tab
-            const firstVisibleTab = document.querySelector('.tab-btn:not([style*="display: none"])');
+    // Automatically activate first visible tab
+            const firstVisibleTab = document.querySelector('.tab-btn[style*="display: inline-flex"]');
+                } else {
+                console.error('❌ ERROR: No visible tabs found!');
+                // Emergency fallback - show admission tab
+                document.querySelector('.tab-btn[onclick*="admission"]')?.click();
+            }
             if (firstVisibleTab) {
                 setTimeout(() => {
                     firstVisibleTab.click();
