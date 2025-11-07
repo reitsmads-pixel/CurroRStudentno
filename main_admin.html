@@ -1329,20 +1329,21 @@
                 // Show loading while we set up
                 showLoading('Setting up your workspace...');
                 
-                // Load user role from Firebase
-                try {
-                    console.log(`📥 Loading user role from Firebase for UID: ${user.uid}`);
-                    const roleSnapshot = await database.ref(`users/${user.uid}/role`).once('value');
-                    const userRole = roleSnapshot.val() || 'admin'; // Default to 'admin' if not set
-                    console.log(`👤 User role loaded: ${userRole}`);
-                    
-                    // Apply role-based access control
-                    console.log("🔒 Applying role-based access...");
-                    applyRoleAccess(userRole);
-                    
-                    // NOW load data from Firebase (after authentication is complete)
-                    console.log("☁️ Loading data from Firebase...");
-                    await loadFromFirebase();
+// Load user role from Firebase
+    try {
+        console.log(`📥 Loading user role from Firebase for UID: ${user.uid}`);
+        const roleSnapshot = await database.ref(`users/${user.uid}/role`).once('value');
+        const userRole = roleSnapshot.val() || 'admin';
+        console.log(`👤 User role loaded: "${userRole}" (type: ${typeof userRole})`);
+        
+        // FIRST: Load data from Firebase
+        console.log("☁️ Loading data from Firebase...");
+        await loadFromFirebase();  // This renders everything
+        
+        // THEN: Apply role-based access control (AFTER data is loaded)
+        console.log("🔒 Applying role-based access...");
+        applyRoleAccess(userRole);
+
                     
                     hideLoading();
                     console.log("✅ Initialization complete!");
